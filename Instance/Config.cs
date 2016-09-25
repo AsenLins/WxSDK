@@ -63,7 +63,7 @@ namespace WxSDK.Instance
         /// <summary>
         /// 获取/设置AccessToken
         /// </summary>
-        public string AccessToken
+        internal string AccessToken
         {
             get
             {
@@ -77,7 +77,7 @@ namespace WxSDK.Instance
         /// <summary>
         /// 获取/设置AccessToken过期时间
         /// </summary>
-        public string AccessToken_Expire
+        internal string AccessToken_Expire
         {
             get
             {
@@ -91,7 +91,7 @@ namespace WxSDK.Instance
         /// <summary>
         /// 获取/设置JsTicket
         /// </summary>
-        public string JsTicket
+        internal string JsTicket
         {
             get
             {
@@ -105,7 +105,8 @@ namespace WxSDK.Instance
         /// <summary>
         /// 获取/设置JsTicket过期时间
         /// </summary>
-        public string JsTicket_Expire {
+        internal string JsTicket_Expire
+        {
             get {
                 return GetValue("JsTicket_Expire");
             }

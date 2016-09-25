@@ -6,24 +6,131 @@ using WxSDK.Instance;
 using WxSDK.Helper;
 namespace WxSDK
 {
-    public static class Wx
+    public class Wx
     {
 
-        public static Pay Pay { get { return new Pay(); } }
+        /// <summary>
+        /// 微信支付类
+        /// </summary>
+        private Pay pay;
+        /// <summary>
+        /// 微信菜单类
+        /// </summary>
+        private Menu menu;
+        /// <summary>
+        /// 微信用户类
+        /// </summary>
+        private User user;
+        /// <summary>
+        /// 微信用户消息类
+        /// </summary>
+        private Mes mes;
+        /// <summary>
+        /// 微信全局AccessToken类
+        /// </summary>
+        private AccessToken accessToken;
+        /// <summary>
+        /// 微信JsTicket类
+        /// </summary>
+        private JsTicket jsTicket;
+        /// <summary>
+        /// 微信全局配置类
+        /// </summary>
+        private Config config;
+        /// <summary>
+        /// 微信发送类
+        /// </summary>
+        private Http http;
 
-        public static Menu Menu { get { return null; } }
+        public Pay Pay
+        {
+            get
+            {
+                if (pay == null)
+                {
+                    pay = new Pay();
+                }
+                return pay;
 
-        public static User User { get { return new User(); } }
+            }
+        }
 
-        public static Mes Mes { get { return null; } }
+        public Menu Menu
+        {
+            get
+            {
+                if (menu == null)
+                {
+                    menu = new Menu();
+                }
+                return menu;
+            }
+        }
 
-        public static AccessToken AccessToken { get { return null; } }
+        public User User
+        {
+            get
+            {
+                if (user == null)
+                {
+                    user = new User();
+                }
+                return user;
+            }
+        }
 
-        public static JsTicket JsTicket { get { return null; } }
+        public Mes Mes { get { return null; } }
 
-        public static Config Config { get { return new Config(); } }
+        public AccessToken AccessToken {
+            get
+            {
+                if (accessToken == null)
+                {
+                    accessToken = new AccessToken();
+                }
+                return accessToken;
+            }
+        }
 
-        public static Http Http { get { return new Http(); } }
+        public JsTicket JsTicket
+        {
+            get
+            {
+                if (jsTicket == null)
+                {
+                    jsTicket=new JsTicket();
+                }
+                return jsTicket;
+            }
+        }
+
+        public Config Config
+        {
+            get
+            {
+                if (config == null)
+                {
+                    config = new Config();
+                }
+                return config;
+            }
+        }
+
+        public Http Http
+        {
+            get
+            {
+                if (http == null)
+                {
+                    http = new Http();
+                }
+                return http;
+            }
+        }
+
+        public Wx() { 
+        
+        }
 
         static Wx() {
             Config.Init();

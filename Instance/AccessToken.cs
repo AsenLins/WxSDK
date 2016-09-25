@@ -3,33 +3,101 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WxSDK.Helper;
+using System.Xml.Linq;
 namespace WxSDK.Instance
 {
+    #region 全局AccessToken类
+    /// <summary>
+    /// 全局AccessToken类
+    /// Create By Asen
+    /// 2016-09-25
+    /// </summary>
+    #endregion
     public class AccessToken
     {
+
+        /// <summary>
+        /// 公共配置类
+        /// </summary>
         Config Config = new Config();
+        /// <summary>
+        /// 设置全局AccessToken的锁
+        /// </summary>
+        public static readonly object TokenLock = new object();
 
-
-
-        public string Get() {
-            if (string.IsNullOrEmpty(Config.AccessToken))
+        #region 【属性】获取全局AccessToken
+        /// <summary>
+        /// 获取全局AccessToken
+        /// </summary>
+        public string Get
+        {
+            get
             {
-                //https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
+                if (ExpiredOrNull() == false)
+                {
+                    return Config.AccessToken;
+                }
+                else
+                {
+                    return Set();
+                }
             }
-
-            return "";
-        
         }
+        #endregion
+        /// <summary>
+        /// 微信调用类
+        /// </summary>
+        Wx Wx = new Wx();
 
-        public string GetAccessToken() {
+        #region 【方法】设置AccessToken与过期时间
+        /// <summary>
+        /// 设置AccessToken与过期时间
+        /// </summary>
+        /// <returns>AccessToken</returns>
+        private string Set() {
+
             Url Url = new Url("https://api.weixin.qq.com/cgi-bin/token");
             Url.Head("?");
             Url.Body("grant_type", "client_credential");
             Url.Body("appid", Config.Appid);
             Url.Body("secret", Config.Secret);
-            return Url.Finish();
+            string AccessTokenUrl = Url.ToString();
+            lock (TokenLock)
+            {
+                if (ExpiredOrNull())
+                {
+                    dynamic AcObj = Wx.Http.PostGetObj(AccessTokenUrl);
+                    Config.AccessToken = AcObj.access_token;
+                    Config.AccessToken_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
+                }
+            }
+            return Config.AccessToken;
         }
+        #endregion
 
+        #region 【方法】判断AccessToken是否过期
+        /// <summary>
+        /// 判断AccessToken是否过期
+        /// </summary>
+        /// <returns>true/false</returns>
+        private bool ExpiredOrNull()
+        {
+            if (string.IsNullOrEmpty(Config.AccessToken))
+            {
+                return true;
+            }
 
+            DateTime ExpireTime = Convert.ToDateTime(Config.AccessToken_Expire);
+
+            if (ExpireTime.AddMinutes(-1) > DateTime.Now)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        #endregion
     }
 }

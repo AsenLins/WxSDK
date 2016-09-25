@@ -25,8 +25,9 @@ namespace WxSDK.Helper
         /// <param name="Encode">编码</param>
         /// <param name="ContentType">请求内容类型</param>
         /// <returns>动态对象</returns>
-        public object PostGetObj(string Url, string Method = "GET", string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
+        public dynamic PostGetObj(string Url, string Method = "GET", string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
         {
+           
             return JsonConvert.DeserializeObject<dynamic>(PostMethod(Url, Method, Encode, ContentType));
         }
         #endregion

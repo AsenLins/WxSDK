@@ -9,7 +9,7 @@ namespace WxSDK.Helper
     {
         public StringBuilder StrUrl;
 
-        public Url(string Url)
+        public Url(string Url="")
         {
             StrUrl = new StringBuilder(Url);
         }
@@ -29,7 +29,7 @@ namespace WxSDK.Helper
             StrUrl.Append(Value);
         }
 
-        public string Finish() {
+        public string ToString() {
             string Url = StrUrl.ToString();
             if (string.IsNullOrEmpty(Url))
             {
@@ -37,5 +37,6 @@ namespace WxSDK.Helper
             }
             return Url.Substring(0, Url.Length - 1);
         }
+
     }
 }

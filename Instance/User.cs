@@ -56,13 +56,14 @@ namespace WxSDK.Instance
         /// <param name="Code">Code</param>
         /// <returns>获取AccessToken的Url</returns>
         public string GetAccessToken(string Code) {
+      
             Url Url = new Url("https://api.weixin.qq.com/sns/oauth2/access_token");
             Url.Head("?");
             Url.Body("appid", Config.Appid);
             Url.Body("secret", Config.Secret);
             Url.Body("code", Code);
             Url.Body("grant_type", "authorization_code");
-            return Url.Finish();
+            return Url.ToString();
         }
         #endregion
 
@@ -83,7 +84,7 @@ namespace WxSDK.Instance
             Url.Body("scope", Scope);
             Url.Body("state", State);
             Url.Body("#wechat_redirect");
-            return Url.Finish();      
+            return Url.ToString();      
         }
         #endregion
 
@@ -98,12 +99,12 @@ namespace WxSDK.Instance
         public string GetUserMes(string AccessToken, string OpenId, string Lang = "zh_CN")
         {
             //Http.Post("");
-            Url Url = new Url("https://api.weixin.qq.com/cgi-bin/user/info");
+            Url Url = new Url(" https://api.weixin.qq.com/sns/userinfo");
             Url.Head("?");
             Url.Body("access_token", AccessToken);
             Url.Body("openid", OpenId);
             Url.Body("lang", Lang);
-            return Url.Finish();
+            return Url.ToString();
         }
         #endregion
 
@@ -114,7 +115,7 @@ namespace WxSDK.Instance
             Url.Head("?");
             Url.Body("access_token", AccessToken);
             Url.Body("next_openid", Next_Openid);
-            return Url.Finish();
+            return Url.ToString();
         }
         #endregion
     }

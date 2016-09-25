@@ -7,5 +7,8 @@ namespace WxSDK.Instance
 {
     public class Menu
     {
+
+
+
     }
 }
