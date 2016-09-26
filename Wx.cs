@@ -79,7 +79,17 @@ namespace WxSDK
             }
         }
 
-        public Mes Mes { get { return null; } }
+        public Mes Mes
+        {
+            get
+            {
+                if (mes == null)
+                {
+                    mes = new Mes();
+                }
+                return mes;
+            }
+        }
 
         public AccessToken AccessToken {
             get

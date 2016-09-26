@@ -6,9 +6,9 @@ using WxSDK.Helper;
 using System.Xml.Linq;
 namespace WxSDK.Instance
 {
-    #region 全局AccessToken类
+    #region 全局基础AccessToken类
     /// <summary>
-    /// 全局AccessToken类
+    /// 全局基础AccessToken类
     /// Create By Asen
     /// 2016-09-25
     /// </summary>
@@ -44,10 +44,8 @@ namespace WxSDK.Instance
             }
         }
         #endregion
-        /// <summary>
-        /// 微信调用类
-        /// </summary>
-        Wx Wx = new Wx();
+
+
 
         #region 【方法】设置AccessToken与过期时间
         /// <summary>
@@ -66,7 +64,8 @@ namespace WxSDK.Instance
             {
                 if (ExpiredOrNull())
                 {
-                    dynamic AcObj = Wx.Http.PostGetObj(AccessTokenUrl);
+                    Http Http = new Http();
+                    dynamic AcObj = Http.PostGetObj(AccessTokenUrl);
                     Config.AccessToken = AcObj.access_token;
                     Config.AccessToken_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
                 }

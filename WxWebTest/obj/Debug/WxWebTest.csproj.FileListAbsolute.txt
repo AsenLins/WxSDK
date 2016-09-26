@@ -1,8 +1,0 @@
-E:\C#Project\WxSDK\WxSDK\WxWebTest\bin\WxWebTest.dll
-E:\C#Project\WxSDK\WxSDK\WxWebTest\bin\WxWebTest.pdb
-E:\C#Project\WxSDK\WxSDK\WxWebTest\bin\WxSDK.dll
-E:\C#Project\WxSDK\WxSDK\WxWebTest\bin\WxSDK.pdb
-E:\C#Project\WxSDK\WxSDK\WxWebTest\obj\Debug\WxWebTest.csprojResolveAssemblyReference.cache
-E:\C#Project\WxSDK\WxSDK\WxWebTest\obj\Debug\WxWebTest.dll
-E:\C#Project\WxSDK\WxSDK\WxWebTest\obj\Debug\WxWebTest.pdb
-E:\C#Project\WxSDK\WxSDK\WxWebTest\bin\Newtonsoft.Json.dll

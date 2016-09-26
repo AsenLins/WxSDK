@@ -36,7 +36,6 @@ namespace WxSDK.Instance
         /// </summary>
         private string timestamp;
 
-        Wx Wx = new Wx();
 
         #region 【属性】获取随机字符串
         /// <summary>
@@ -131,10 +130,10 @@ namespace WxSDK.Instance
         /// <returns>AccessToken</returns>
         private string Set()
         {
-
+            AccessToken AccessToken = new AccessToken();
             Url Url = new Url("https://api.weixin.qq.com/cgi-bin/ticket/getticket");
             Url.Head("?");
-            Url.Body("access_token",Wx.AccessToken.Get);
+            Url.Body("access_token", AccessToken.Get);
             Url.Body("type", "jsapi");
             string JsTicketUrl = Url.ToString();
 
@@ -142,7 +141,8 @@ namespace WxSDK.Instance
             {
                 if (ExpiredOrNull())
                 {
-                    dynamic AcObj = Wx.Http.PostGetObj(JsTicketUrl);
+                    Http Http = new Http();
+                    dynamic AcObj = Http.PostGetObj(JsTicketUrl);
                     Config.JsTicket = AcObj.ticket;
                     Config.JsTicket_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
                 }

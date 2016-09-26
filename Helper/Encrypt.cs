@@ -52,15 +52,15 @@ namespace WxSDK.Helper
             byte[] SHA1Byte = SHA1.Create().ComputeHash(OriginByte);
             return BitConverter.ToString(SHA1Byte).Replace("-", "");
 
-             //var Buffer = Encoding.UTF8.GetBytes(EncryptStr);
-             //var Data = SHA1.Create().ComputeHash(Buffer);
- 
-             //var Str = new StringBuilder();
-             //foreach (var t in Data)
-             //{
-             //    Str.Append(t.ToString("X2"));
-             //}
-             //return Str.ToString();
+            //var Buffer = Encoding.UTF8.GetBytes(EncryptStr);
+            //var Data = SHA1.Create().ComputeHash(Buffer);
+
+            //var Str = new StringBuilder();
+            //foreach (var t in Data)
+            //{
+            //    Str.Append(t.ToString("X2"));
+            //}
+            //return Str.ToString();
         }
         #endregion
 

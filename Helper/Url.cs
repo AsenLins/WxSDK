@@ -29,13 +29,13 @@ namespace WxSDK.Helper
             StrUrl.Append(Value);
         }
 
-        public string ToString() {
+        public override string ToString() {
             string Url = StrUrl.ToString();
             if (string.IsNullOrEmpty(Url))
             {
                 return "";
             }
-            return Url.Substring(0, Url.Length - 1);
+            return Url.Substring(0, Url.Length);
         }
 
     }

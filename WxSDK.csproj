@@ -55,6 +55,18 @@
     <Compile Include="Instance\Mes.cs" />
     <Compile Include="Instance\Pay.cs" />
     <Compile Include="Instance\User.cs" />
+    <Compile Include="Model\Mes\All.cs" />
+    <Compile Include="Model\Mes\Wx_Images.cs" />
+    <Compile Include="Model\Mes\Wx_Link.cs" />
+    <Compile Include="Model\Mes\Wx_Loaction.cs" />
+    <Compile Include="Model\Mes\MesType.cs" />
+    <Compile Include="Model\Mes\Wx_SmallVideo.cs" />
+    <Compile Include="Model\Mes\Wx_Text.cs" />
+    <Compile Include="Model\Mes\Wx_Video.cs" />
+    <Compile Include="Model\Mes\Wx_Voice.cs" />
+    <Compile Include="Model\WxAccessToken.cs" />
+    <Compile Include="Model\WxUser.cs" />
+    <Compile Include="Model\WxUserList.cs" />
     <Compile Include="Wx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

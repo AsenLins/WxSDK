@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-
+using System.Web;
+using WxSDK.Model;
 using WxSDK.Helper;
+using Newtonsoft.Json;
+using System.Web;
 
 namespace WxSDK.Instance
 {
@@ -22,30 +25,34 @@ namespace WxSDK.Instance
         /// 微信配置类
         /// </summary>
         Config Config = new Config();
+        /// <summary>
+        /// Http发送类
+        /// </summary>
+        Http Http = new Http();
 
         public User() { }
 
-        #region 【方法】获取用户静默授权地址
+        #region 【方法】跳转静默授权
         /// <summary>
-        /// 获取用户静默授权地址
+        /// 跳转静默授权
         /// </summary>
         /// <param name="Redirect_Uri">回调地址</param>
         /// <returns>URL</returns>
-        public string Snsapi_Base(string Redirect_Uri)
+        public void Snsapi_Base(string Redirect_Uri)
         {
-            return Snsapi_Login(Redirect_Uri, "snsapi_base");
+             Snsapi_Login(Redirect_Uri, "snsapi_base");
         }
         #endregion
 
-        #region 【方法】获取用户授权地址
+        #region 【方法】跳转用户授权
         /// <summary>
-        /// 获取用户授权地址
+        /// 跳转用户授权
         /// </summary>
         /// <param name="Redirect_Uri">回调地址</param>
         /// <returns>静默授权的URL</returns>
-        public string Snsapi_UserInfo(string Redirect_Uri)
+        public void Snsapi_UserInfo(string Redirect_Uri)
         {
-            return Snsapi_Login(Redirect_Uri, "snsapi_userinfo");
+             Snsapi_Login(Redirect_Uri, "snsapi_userinfo");
         }
         #endregion
 
@@ -55,7 +62,7 @@ namespace WxSDK.Instance
         /// </summary>
         /// <param name="Code">Code</param>
         /// <returns>获取AccessToken的Url</returns>
-        public string GetAccessToken(string Code) {
+        public WxAccessToken GetAccessToken(string Code) {
       
             Url Url = new Url("https://api.weixin.qq.com/sns/oauth2/access_token");
             Url.Head("?");
@@ -63,7 +70,8 @@ namespace WxSDK.Instance
             Url.Body("secret", Config.Secret);
             Url.Body("code", Code);
             Url.Body("grant_type", "authorization_code");
-            return Url.ToString();
+            string ResultStr = Http.Post(Url.ToString());
+            return JsonConvert.DeserializeObject<WxAccessToken>(ResultStr);
         }
         #endregion
 
@@ -74,7 +82,7 @@ namespace WxSDK.Instance
         /// <param name="Redirect_Uri">地址</param>
         /// <param name="Scope">授权方式</param>
         /// <returns>授权Url</returns>
-        private string Snsapi_Login(string Redirect_Uri, string Scope,string State="Default")
+        private void Snsapi_Login(string Redirect_Uri, string Scope,string State="Default")
         {
             Url Url = new Url("https://open.weixin.qq.com/connect/oauth2/authorize");
             Url.Head("?");
@@ -84,7 +92,7 @@ namespace WxSDK.Instance
             Url.Body("scope", Scope);
             Url.Body("state", State);
             Url.Body("#wechat_redirect");
-            return Url.ToString();      
+            HttpContext.Current.Response.Redirect(Url.ToString());  
         }
         #endregion
 
@@ -96,7 +104,7 @@ namespace WxSDK.Instance
         /// <param name="OpenId">OpenId</param>
         /// <param name="Lang">语言</param>
         /// <returns>获取用户信息Url</returns>
-        public string GetUserMes(string AccessToken, string OpenId, string Lang = "zh_CN")
+        public WxUser GetUserMes(string AccessToken, string OpenId, string Lang = "zh_CN")
         {
             //Http.Post("");
             Url Url = new Url(" https://api.weixin.qq.com/sns/userinfo");
@@ -104,18 +112,21 @@ namespace WxSDK.Instance
             Url.Body("access_token", AccessToken);
             Url.Body("openid", OpenId);
             Url.Body("lang", Lang);
-            return Url.ToString();
+            string ResultStr = Http.Post(Url.ToString());
+            return JsonConvert.DeserializeObject<WxUser>(ResultStr);
         }
         #endregion
 
         #region 【方法】获取用户列表
-        public string GetUserList(string AccessToken, string Next_Openid)
+        public WxUserList GetUserList(string AccessToken, string Next_Openid = "")
         {
+            WxUserList UserList = new WxUserList();
             Url Url = new Url("https://api.weixin.qq.com/cgi-bin/user/get");
             Url.Head("?");
             Url.Body("access_token", AccessToken);
             Url.Body("next_openid", Next_Openid);
-            return Url.ToString();
+            string ResultStr=Http.Post(Url.ToString());
+            return JsonConvert.DeserializeObject<WxUserList>(ResultStr);
         }
         #endregion
     }
