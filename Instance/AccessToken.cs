@@ -45,32 +45,40 @@ namespace WxSDK.Instance
         }
         #endregion
 
-
-
         #region 【方法】设置AccessToken与过期时间
         /// <summary>
         /// 设置AccessToken与过期时间
         /// </summary>
         /// <returns>AccessToken</returns>
         private string Set() {
-
-            Url Url = new Url("https://api.weixin.qq.com/cgi-bin/token");
-            Url.Head("?");
-            Url.Body("grant_type", "client_credential");
-            Url.Body("appid", Config.Appid);
-            Url.Body("secret", Config.Secret);
-            string AccessTokenUrl = Url.ToString();
-            lock (TokenLock)
+            try
             {
-                if (ExpiredOrNull())
+                Url Url = new Url("https://api.weixin.qq.com/cgi-bin/token");
+                Url.Head("?");
+                Url.Body("grant_type", "client_credential");
+                Url.Body("appid", Config.Appid);
+                Url.Body("secret", Config.Secret);
+                string AccessTokenUrl = Url.ToString();
+                lock (TokenLock)
                 {
-                    Http Http = new Http();
-                    dynamic AcObj = Http.PostGetObj(AccessTokenUrl);
-                    Config.AccessToken = AcObj.access_token;
-                    Config.AccessToken_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
+                    if (ExpiredOrNull())
+                    {
+                        Http Http = new Http();
+                        dynamic AcObj = Http.PostGetObj(AccessTokenUrl);
+                        Config.AccessToken = AcObj.access_token;
+                        Config.AccessToken_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
+                    }
                 }
+                return Config.AccessToken;
             }
-            return Config.AccessToken;
+            catch (WxException WxEx)
+            {
+                throw WxEx;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Wx.AccessToken.Set:设置全局AccessToken出错", ex);
+            }
         }
         #endregion
 
@@ -81,21 +89,22 @@ namespace WxSDK.Instance
         /// <returns>true/false</returns>
         private bool ExpiredOrNull()
         {
-            if (string.IsNullOrEmpty(Config.AccessToken))
-            {
-                return true;
-            }
+                if (string.IsNullOrEmpty(Config.AccessToken))
+                {
+                    return true;
+                }
 
-            DateTime ExpireTime = Convert.ToDateTime(Config.AccessToken_Expire);
+                DateTime ExpireTime = Convert.ToDateTime(Config.AccessToken_Expire);
 
-            if (ExpireTime.AddMinutes(-1) > DateTime.Now)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+                if (ExpireTime.AddMinutes(-1) > DateTime.Now)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            
         }
         #endregion
     }

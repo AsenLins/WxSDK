@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
+using WxSDK.Model.Exception;
 using Newtonsoft.Json;
 namespace WxSDK.Helper
 {
@@ -25,13 +26,12 @@ namespace WxSDK.Helper
         /// <param name="Encode">编码</param>
         /// <param name="ContentType">请求内容类型</param>
         /// <returns>动态对象</returns>
-        public dynamic PostGetObj(string Url, string Method = "GET", string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
+        public dynamic PostGetObj(string Url, string Method = "GET", string PostParam = "", string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
         {
-           
-            return JsonConvert.DeserializeObject<dynamic>(PostMethod(Url, Method, Encode, ContentType));
+
+            return JsonConvert.DeserializeObject<dynamic>(PostMethod(Url, Method, PostParam, Encode, ContentType));
         }
         #endregion
-
 
         #region 【方法】发送Post请求,直接返回请求返回值（string）
         /// <summary>
@@ -42,9 +42,9 @@ namespace WxSDK.Helper
         /// <param name="Encode">编码</param>
         /// <param name="ContentType">请求内容类型</param>
         /// <returns>字符串值</returns>
-        public string Post(string Url, string Method = "GET", string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
+        public string Post(string Url,string Method = "GET",string PostParam="",string Encode = "UTF-8", string ContentType = "application/x-www-form-urlencoded")
         {
-            return PostMethod(Url, Method, Encode, ContentType);
+            return PostMethod(Url, Method,PostParam,Encode, ContentType);
         }
         #endregion
 
@@ -54,25 +54,33 @@ namespace WxSDK.Helper
         /// </summary>
         /// <param name="url">请求地址</param>
         /// <param name="Method">请求方式（GET/POST）</param>
-        private string PostMethod(string Url, string Method, string Encode, string ContentType)
+        private string PostMethod(string Url, string Method,string PostParam,string Encode, string ContentType)
         {
             
             Method=Method.ToUpper();
             string Param = "";
-            int ParamIndex = Url.IndexOf('?');
-            if (ParamIndex > -1&&Method=="POST")
+
+            if (string.IsNullOrEmpty(PostParam))
             {
-                Param = Url.Substring(ParamIndex + 1);
-                Url = Url.Substring(0, ParamIndex - 1);
+                int ParamIndex = Url.IndexOf('?');
+
+                if (ParamIndex > -1 && Method == "POST")
+                {
+                    Param = Url.Substring(ParamIndex + 1);
+                    Url = Url.Substring(0, ParamIndex);
+                }
             }
+            else
+            {
+                Param = PostParam;
+            }
+            
 
             HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(Url);
             Request.Method = Method;
 
             if (Method == "POST")
             {
-
-
                 byte[] data = Encoding.GetEncoding(Encode).GetBytes(Param);
                 Request.ContentType = ContentType;
                 Request.ContentLength = data.Length;
@@ -87,6 +95,22 @@ namespace WxSDK.Helper
 
             StreamReader StrRead = new StreamReader(StrRes);
             string ReturnStr = StrRead.ReadToEnd();
+
+            if (ReturnStr.Contains("errcode"))
+            {
+                WxError WxError = JsonConvert.DeserializeObject<WxError>(ReturnStr);
+
+                if (WxError.errcode == "0")
+                {
+                    return "ok";
+                }
+                WxException _WxException = new WxException("微信接口调用异常,errorcode："+WxError.errcode+",errmsg："+WxError.errmsg);
+                _WxException.errcode = WxError.errcode;
+                _WxException.errmsg = WxError.errmsg;
+                _WxException.errorigin = ReturnStr;
+                throw _WxException;
+            }
+ 
             StrRead.Close();
             return ReturnStr;
         }

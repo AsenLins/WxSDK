@@ -8,3 +8,4 @@ E:\C#Project\WxSDK\WxSDK\bin\Debug\WxSDK.dll
 E:\C#Project\WxSDK\WxSDK\bin\Debug\WxSDK.pdb
 E:\C#Project\WxSDK\WxSDK\obj\Debug\WxSDK.dll
 E:\C#Project\WxSDK\WxSDK\obj\Debug\WxSDK.pdb
+E:\C#Project\WxSDK\WxSDK\obj\Debug\WxSDK.csprojResolveAssemblyReference.cache

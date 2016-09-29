@@ -54,25 +54,40 @@
     <Compile Include="Instance\Menu.cs" />
     <Compile Include="Instance\Mes.cs" />
     <Compile Include="Instance\Pay.cs" />
+    <Compile Include="Instance\Template.cs" />
     <Compile Include="Instance\User.cs" />
-    <Compile Include="Model\Mes\All.cs" />
-    <Compile Include="Model\Mes\Wx_Images.cs" />
+    <Compile Include="Model\Exception\WxError.cs" />
+    <Compile Include="Model\Menu\Wx_Menu.cs" />
+    <Compile Include="Model\Template\Wx_Industry.cs" />
+    <Compile Include="WxException.cs" />
+    <Compile Include="Model\Event\Wx_Menu.cs" />
+    <Compile Include="Model\Event\EventAll.cs" />
+    <Compile Include="Model\Event\EventType.cs" />
+    <Compile Include="Model\Event\Wx_ReportLoaction.cs" />
+    <Compile Include="Model\Event\Wx_Subscribe.cs" />
+    <Compile Include="Model\Event\Wx_SubscribeBySCAN.cs" />
+    <Compile Include="Model\Mes\MesAll.cs" />
+    <Compile Include="Model\Mes\Wx_Articles.cs" />
+    <Compile Include="Model\Mes\Wx_Image.cs" />
     <Compile Include="Model\Mes\Wx_Link.cs" />
     <Compile Include="Model\Mes\Wx_Loaction.cs" />
     <Compile Include="Model\Mes\MesType.cs" />
+    <Compile Include="Model\Mes\Wx_Music.cs" />
+    <Compile Include="Model\Mes\Wx_PicText.cs" />
     <Compile Include="Model\Mes\Wx_SmallVideo.cs" />
     <Compile Include="Model\Mes\Wx_Text.cs" />
     <Compile Include="Model\Mes\Wx_Video.cs" />
     <Compile Include="Model\Mes\Wx_Voice.cs" />
-    <Compile Include="Model\WxAccessToken.cs" />
-    <Compile Include="Model\WxUser.cs" />
-    <Compile Include="Model\WxUserList.cs" />
+    <Compile Include="Model\User\WxAccessToken.cs" />
+    <Compile Include="Model\User\WxUser.cs" />
+    <Compile Include="Model\User\WxUserList.cs" />
     <Compile Include="Wx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

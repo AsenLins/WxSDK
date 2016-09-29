@@ -47,20 +47,6 @@ namespace WxSDK.Instance
         }
 
         /// <summary>
-        /// 获取/设置公众号授权回调地址
-        /// </summary>
-        public string Authorize_Url {
-            get
-            {
-                return GetValue("Authorize_Url");
-            }
-            set {
-                SetValue("Authorize_Url", value);
-            }
-        }
-
-
-        /// <summary>
         /// 获取/设置AccessToken
         /// </summary>
         internal string AccessToken
@@ -166,34 +152,39 @@ namespace WxSDK.Instance
 
         #region 【方法】初始化配置文件
         public static void Init() {
-
-            XDocument XDoc;
-            if (Directory.Exists(FilePath))
+            try
             {
-                return;
+                XDocument XDoc;
+                if (Directory.Exists(FilePath))
+                {
+                    return;
+                }
+                lock (ConfigLock)
+                {
+                    if (Directory.Exists(RootPath) == false)
+                    {
+                        Directory.CreateDirectory(RootPath);
+                    }
+                    if (File.Exists(FilePath) == false)
+                    {
+                        XDoc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), new XElement("Config"));
+                        XElement Root = XDoc.Element("Config");
+                        Root.Add(new XElement("Appid", ""));
+                        Root.Add(new XElement("Secret", ""));
+                        Root.Add(new XElement("PayKey", ""));
+                        Root.Add(new XElement("AccessToken", ""));
+                        Root.Add(new XElement("AccessToken_Expire", ""));
+                        Root.Add(new XElement("JsTicket", ""));
+                        Root.Add(new XElement("JsTicket_Expire", ""));
+                        Root.Add(new XElement("Mch_id", ""));
+                        Root.Add(new XElement("PayKey", ""));
+                        XDoc.Save(FilePath);
+                    }
+                }
             }
-            lock (ConfigLock)
+            catch (Exception ex)
             {
-                if (Directory.Exists(RootPath) == false)
-                {
-                    Directory.CreateDirectory(RootPath);
-                }
-                if (File.Exists(FilePath) == false)
-                {
-                    XDoc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), new XElement("Config"));
-                    XElement Root = XDoc.Element("Config");
-                    Root.Add(new XElement("Appid",""));
-                    Root.Add(new XElement("Secret",""));
-                    Root.Add(new XElement("Authorize_Url", ""));
-                    Root.Add(new XElement("PayKey",""));
-                    Root.Add(new XElement("AccessToken", ""));
-                    Root.Add(new XElement("AccessToken_Expire", ""));
-                    Root.Add(new XElement("JsTicket",""));
-                    Root.Add(new XElement("JsTicket_Expire",""));
-                    Root.Add(new XElement("Mch_id", ""));
-                    Root.Add(new XElement("PayKey",""));
-                    XDoc.Save(FilePath);
-                }
+                throw new Exception("Wx.Config.Init:初始化配置文件出错!", ex);
             }
         }
         #endregion

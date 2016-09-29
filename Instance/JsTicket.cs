@@ -12,7 +12,6 @@ namespace WxSDK.Instance
     /// 2016-09-25
     /// </summary>
     #endregion
-
     public class JsTicket
     {
         /// <summary>
@@ -130,27 +129,37 @@ namespace WxSDK.Instance
         /// <returns>AccessToken</returns>
         private string Set()
         {
-            AccessToken AccessToken = new AccessToken();
-            Url Url = new Url("https://api.weixin.qq.com/cgi-bin/ticket/getticket");
-            Url.Head("?");
-            Url.Body("access_token", AccessToken.Get);
-            Url.Body("type", "jsapi");
-            string JsTicketUrl = Url.ToString();
-
-            lock (TicketLock)
+            try
             {
-                if (ExpiredOrNull())
+                AccessToken AccessToken = new AccessToken();
+                Url Url = new Url("https://api.weixin.qq.com/cgi-bin/ticket/getticket");
+                Url.Head("?");
+                Url.Body("access_token", AccessToken.Get);
+                Url.Body("type", "jsapi");
+                string JsTicketUrl = Url.ToString();
+
+                lock (TicketLock)
                 {
-                    Http Http = new Http();
-                    dynamic AcObj = Http.PostGetObj(JsTicketUrl);
-                    Config.JsTicket = AcObj.ticket;
-                    Config.JsTicket_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
+                    if (ExpiredOrNull())
+                    {
+                        Http Http = new Http();
+                        dynamic AcObj = Http.PostGetObj(JsTicketUrl);
+                        Config.JsTicket = AcObj.ticket;
+                        Config.JsTicket_Expire = (DateTime.Now.AddSeconds(Convert.ToInt32(AcObj.expires_in))).ToString();
+                    }
                 }
+                return Config.JsTicket;
             }
-            return Config.JsTicket;
+            catch (WxException WxEx)
+            {
+                throw WxEx;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Wx.JsTicket.Set:设置全局JsTicket出错", ex);
+            }
         }
         #endregion
-
 
         #region 【方法】判断JsTicket是否过期
         /// <summary>

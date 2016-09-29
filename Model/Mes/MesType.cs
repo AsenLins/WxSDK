@@ -16,17 +16,6 @@ namespace WxSDK.Model.Mes
         public  const string location = "location";
         public  const string link = "link";
 
-       public static class Event
-       {
-
-           public  const string subscribe="subscribe";
-           public  const string subscribeBySCAN = "subscribeBySCAN";
-           public  const string SCAN = "SCAN";
-           public  const string LOCATION = "LOCATION";
-           public  const string CLICK = "CLICK";
-           public  const string VIEW = "VIEW";
-
-       }
        //public enum Event
        //{
        //    text=1,

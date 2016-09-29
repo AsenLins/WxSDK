@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WxSDK.Model
+namespace WxSDK.Model.User
 {
     public class WxAccessToken
     {

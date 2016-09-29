@@ -42,6 +42,9 @@ namespace WxSDK
         /// </summary>
         private Http http;
 
+
+        private Template template;
+
         public Pay Pay
         {
             get
@@ -137,6 +140,19 @@ namespace WxSDK
                 return http;
             }
         }
+
+        public Template Template
+        {
+            get
+            {
+                if (template == null)
+                {
+                    template = new Template();
+                }
+                return template;
+            }
+        }
+
 
         public Wx() { 
         

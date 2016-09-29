@@ -10,6 +10,13 @@ using WxSDK.Helper;
 
 namespace WxSDK.Instance
 {
+    #region 微信消息类
+    /// <summary>
+    /// 微信消息类
+    /// Create By Asen
+    /// 2016-09-29
+    /// </summary>
+    #endregion
     public class Mes
     {
 
@@ -25,14 +32,20 @@ namespace WxSDK.Instance
 
         public void Load(string MesStr)
         {
-            XMes = XDocument.Parse(MesStr).Element("xml");
-            foreach (XElement XNode in XMes.Elements())
+            try
             {
-                XNode.SetValue(XNode.Value);
+                XMes = XDocument.Parse(MesStr).Element("xml");
+                foreach (XElement XNode in XMes.Elements())
+                {
+                    XNode.SetValue(XNode.Value);
+                }
+                this.MesStr = MesStr;
             }
-            this.MesStr = MesStr;
+            catch (Exception ex){
+                throw new Exception("Wx.Mes.Load:加载用户信息Xml出错", ex);
+            }
         }
-
+        #region 【方法】验证是否微信消息
         /// <summary>
         /// 验证是否微信消息
         /// </summary>
@@ -43,42 +56,109 @@ namespace WxSDK.Instance
         /// <returns>true/false</returns>
         public bool Verify(string Token, string sign, string nonce,string timestamp)
         {
+            try
+            {
+                Url Url = new Url();
+                Url.Body(nonce);
+                Url.Body(timestamp);
+                Url.Body(Token);
 
-            Url Url = new Url();
-            Url.Body(nonce);
-            Url.Body(timestamp);
-            Url.Body(Token); 
-            
-            string SHA1Str=Encrypt.Get_SHA1(Url.ToString());
-            if (SHA1Str == sign.ToUpper())
-            {
-                return true;
+                string SHA1Str = Encrypt.Get_SHA1(Url.ToString());
+                if (SHA1Str == sign.ToUpper())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception("Wx.Mes.Verify:验证微信信息出错。", ex);
             }
         }
+        #endregion
 
+        #region 【方法】获取消息类型
+        /// <summary>
+        /// 获取消息类型
+        /// </summary>
+        /// <returns>类型名称</returns>
         public string MesType() {
-            if (XMes.Element("Event") == null)
+            return XMes.Element("MsgType").Value;
+        }
+        #endregion
+
+        #region 【方法】获取事件类型
+        /// <summary>
+        /// 获取事件类型
+        /// </summary>
+        /// <returns>类型名称</returns>
+        public string EventType()
+        {
+            try
             {
-                return XMes.Element("MsgType").Value;
-            }
-            else
-            {
+                if (XMes.Element("Event") == null)
+                {
+                    return "";
+                }
+
                 if (XMes.Element("Event").Value == "subscribe" && XMes.Element("EventKey") != null)
                 {
                     return "subscribeBySCAN";
                 }
                 return XMes.Element("Event").Value;
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Wx.Mes.EventType:获取消息类型出错。", ex);
+            }
         }
+        #endregion
 
-        public T GetMesObj<T>(string MesType) where T:Model.Mes.All
+        #region 【方法】获取信息对象
+        /// <summary>
+        /// 获取信息对象
+        /// </summary>
+        /// <typeparam name="T">Mes对象</typeparam>
+        /// <returns>消息对象</returns>
+        public T GetMesObj<T>() where T:Model.Mes.MesAll
         {
-            string MesJsonStr = JsonConvert.SerializeXNode(XMes, Newtonsoft.Json.Formatting.None, true);
-            return JsonConvert.DeserializeObject<T>(MesJsonStr);
+            return ConvertObj<T>();
         }
+        #endregion
+
+        #region 【方法】获取事件对象
+        /// <summary>
+        /// 获取事件对象
+        /// </summary>
+        /// <typeparam name="T">Event对象</typeparam>
+        /// <returns>事件对象</returns>
+        public T GetEventObj<T>() where T:Model.Event.EventAll
+        {
+            return ConvertObj<T>();      
+        }
+        #endregion
+
+        #region 【方法】转换消息/事件方法对象主体
+        /// <summary>
+        /// 转换消息/事件方法对象主体
+        /// </summary>
+        /// <typeparam name="T">消息/事件类型</typeparam>
+        /// <returns>消息/事件对象</returns>
+        private T ConvertObj<T>() {
+            try
+            {
+                string MesJsonStr = JsonConvert.SerializeXNode(XMes, Newtonsoft.Json.Formatting.None, true);
+                return JsonConvert.DeserializeObject<T>(MesJsonStr);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Wx.Mes.ConvertObj:转换消息对象出错。", ex);
+            }
+        }
+        #endregion
+
     }
 }

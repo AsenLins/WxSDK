@@ -6,20 +6,24 @@ using System.Text;
 namespace WxSDK.Model.Mes
 {
     /// <summary>
-    /// 链接消息
+    /// 图文消息Item类
     /// </summary>
-    public class Wx_Link : MesAll
+    public class Wx_Articles
     {
         /// <summary>
-        /// 消息标题
+        /// 图文消息标题
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 消息描述
+        /// 图文消息描述
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// 消息链接
+        /// (必须是微信素材)图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
+        /// </summary>
+        public string PicUrl { get; set; }
+        /// <summary>
+        /// 点击图文消息跳转链接
         /// </summary>
         public string Url { get; set; }
     }

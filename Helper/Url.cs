@@ -7,7 +7,7 @@ namespace WxSDK.Helper
 {
     public class Url
     {
-        public StringBuilder StrUrl;
+        private StringBuilder StrUrl;
 
         public Url(string Url="")
         {
@@ -35,7 +35,14 @@ namespace WxSDK.Helper
             {
                 return "";
             }
-            return Url.Substring(0, Url.Length);
+            if (Url.IndexOf('&') > -1)
+            {
+                return Url.Substring(0, Url.Length - 1);
+            }
+            else
+            {
+                return Url.Substring(0, Url.Length);
+            }
         }
 
     }
